@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kidlat CivicLabs — Official Website
+
+Kidlat CivicLabs is a civic technology lab that helps government agencies and partners develop innovative digital solutions to the Philippines' most pressing societal challenges.
+
+---
+
+## Tech Stack
+
+| Layer | Tool |
+|---|---|
+| Framework | Next.js (App Router) + Tailwind CSS |
+| Hosting | Vercel |
+| Email | Resend + React Email |
+| Forms | React Hook Form + Zod |
+| Rate Limiting | Upstash Ratelimit |
+| CAPTCHA | Cloudflare Turnstile |
+| CMS (Optional) | Sanity |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js v18.17 or later
+- npm
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/kidlatciviclabs/website.git
+cd website
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+```
+
+### Environment Variables
+
+Fill in the following in your `.env.local`:
+
+```bash
+RESEND_API_KEY=
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+NEXT_PUBLIC_SITE_URL=https://kidlatciviclabs.org
+```
+
+### Run Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# → http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+└── app/
+    ├── page.js              # Homepage
+    ├── about/               # About page
+    ├── projects/            # Projects & case studies
+    ├── research/            # Research & publications
+    ├── contact/             # Contact page
+    └── api/contact/         # Email API route
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Please read our [Git Workflow Guidelines](./docs/git-guidelines.md) before contributing. All changes must go through a Pull Request — no direct commits to `main` or `staging`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Contact
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**official@kidlatciviclabs.org**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+*Kidlat CivicLabs — All Rights Reserved 2025*

@@ -1,0 +1,640 @@
+# Kidlat CivicLabs — Website Technical Guide
+
+> A comprehensive reference for building the Kidlat CivicLabs civic tech portfolio and research showcase website — including tech stack, brand implementation, SEO, security, and deployment.
+
+---
+
+## Table of Contents
+
+1. [Project Overview](#1-project-overview)
+2. [Tech Stack](#2-tech-stack)
+3. [Brand Identity](#3-brand-identity)
+4. [Project Setup](#4-project-setup)
+5. [Folder Structure](#5-folder-structure)
+6. [Brand Implementation in Code](#6-brand-implementation-in-code)
+7. [Contact Form & Email Sending](#7-contact-form--email-sending)
+8. [SEO Optimization](#8-seo-optimization)
+9. [Security](#9-security)
+10. [Deployment](#10-deployment)
+11. [Tools & Monitoring](#11-tools--monitoring)
+12. [Quick Reference Prompt](#12-quick-reference-prompt)
+
+---
+
+## 1. Project Overview
+
+| Property | Value |
+|---|---|
+| **Organization** | Kidlat CivicLabs |
+| **Site Type** | Civic Tech Portfolio & Research Showcase |
+| **Primary Goal** | Showcase projects, research, and civic tech solutions |
+| **Email Use Case** | Contact / inquiry form submissions |
+| **Contact Email** | official@kidlatciviclabs.org |
+| **Dev Experience** | Intermediate (comfortable with JS/React) |
+| **Hosting Target** | Vercel |
+
+---
+
+## 2. Tech Stack
+
+| Layer | Tool | Purpose |
+|---|---|---|
+| **Framework** | Next.js (App Router) | SSG, SEO, serverless API routes |
+| **Styling** | Tailwind CSS | Utility-first, fast UI development |
+| **Hosting** | Vercel | Zero-config deploys, serverless functions |
+| **Email API** | Resend | Transactional email sending |
+| **Email Templates** | React Email | React-based, on-brand email components |
+| **Form Handling** | React Hook Form | Lightweight client-side validation |
+| **Input Validation** | Zod | Server-side schema validation |
+| **Rate Limiting** | Upstash Ratelimit | Prevent contact form abuse |
+| **CAPTCHA** | Cloudflare Turnstile | Bot protection, frictionless UX |
+| **CMS (Optional)** | Sanity | Editable project/research content |
+
+---
+
+## 3. Brand Identity
+
+> All design and development decisions on the Kidlat CivicLabs website must adhere to the visual identity guidelines below, sourced from the official Kidlat CivicLabs Brand Guidelines (2025).
+
+### 3.1 Color Palette
+
+| Name | Hex | Role | Usage |
+|---|---|---|---|
+| **Vivid Azure** | `#0071BC` | Main Color | 60% — dominant across all materials |
+| **Dark Azure** | `#041C23` | Neutral | 30% — complements main color; use for dark backgrounds |
+| **White** | `#FFFFFF` | Neutral | 30% — complements main color; use for light backgrounds |
+| **Fresh Sky** | `#29ABE2` | Accent | 10% — use sparingly |
+| **Jade Green** | `#39B54A` | Accent | 10% — use sparingly |
+
+#### Tailwind CSS Custom Colors
+
+Add these to `tailwind.config.js`:
+
+```js
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        'vivid-azure': '#0071BC',
+        'dark-azure': '#041C23',
+        'fresh-sky': '#29ABE2',
+        'jade-green': '#39B54A',
+      },
+    },
+  },
+};
+```
+
+#### CSS Variables
+
+Add these to `src/app/globals.css`:
+
+```css
+:root {
+  --color-primary: #0071BC;      /* Vivid Azure */
+  --color-dark: #041C23;         /* Dark Azure */
+  --color-white: #FFFFFF;        /* White */
+  --color-accent-sky: #29ABE2;   /* Fresh Sky */
+  --color-accent-green: #39B54A; /* Jade Green */
+}
+```
+
+### 3.2 Gradients
+
+Kidlat CivicLabs uses soft, abstract gradients as the main graphic element. Use them as backgrounds and visual accents — always whenever possible.
+
+| Gradient | Colors | CSS |
+|---|---|---|
+| **Gradient 01** | Fresh Sky → Jade Green | `linear-gradient(135deg, #29ABE2, #39B54A)` |
+| **Gradient 02** | Vivid Azure → Fresh Sky | `linear-gradient(135deg, #0071BC, #29ABE2)` |
+| **Gradient 03** | Vivid Azure → Dark Azure | `linear-gradient(135deg, #0071BC, #041C23)` |
+
+> ⚠️ **Avoid:** Combining any accent color with a neutral (e.g. Fresh Sky + White or Jade Green + Dark Azure).
+>
+> **Gradient Order Rule:** Accent → Main → Neutral. Order is reversible.
+
+### 3.3 Typography
+
+| Role | Typeface | Weight | Case | Notes |
+|---|---|---|---|---|
+| **Header** | Gibson | Bold | ALL CAPS ONLY | Tracking: 0, no italics |
+| **Subheader / Body** | Systemia | Medium / Bold | ALL CAPS or Title Case | Use italics for emphasis |
+| **Body / Footer** | Code Pro | Regular / Light | Sentence case | Tracking: 20, use thicker weight for emphasis |
+
+#### Recommended Type Hierarchy
+
+```
+Primary:    Gibson Bold (Header) + Code Pro Regular (Body)
+Secondary:  Systemia Medium (Header) + Code Pro Light (Body)
+```
+
+> **Note:** Gibson and Systemia are licensed fonts. Ensure your team has access via the Kidlat CivicLabs design resources (see Section 06 of the brand guidelines). As a web fallback, use `system-ui` or `Inter` if the custom fonts are not yet web-licensed.
+
+### 3.4 Logo Usage
+
+- **Primary (Horizontal):** Use whenever possible on light or dark backgrounds
+- **Negative version:** White logo — use on dark backgrounds or over images
+- **Positive version:** Colored logo — use on light backgrounds
+- **Clearance:** Maintain spacing of one "K" unit horizontally and vertically around the logo
+
+#### Logo Don'ts
+- ❌ Do not squish or stretch the logo
+- ❌ Do not rotate the logo
+- ❌ Do not add strokes (subtle shadows are allowed)
+- ❌ Do not apply foreign gradients or off-brand colors
+
+### 3.5 Iconography
+
+- Use **solid icons only** — no outline icons
+- **Variant 1:** Apply brand gradients on icons to prevent a flat look
+- **Variant 2:** Use neutral colors with accent color accents for a simpler look
+- ❌ Avoid flat, single-color icons — they don't reflect brand visuals effectively
+
+### 3.6 Graphic Elements
+
+- **Gradients** — main graphic element, use always whenever possible; keep them soft and abstract
+- **Patterns** — use when material lacks visual flavor, or to frame images/subjects
+- Apply a **photo filter matching brand colors** when using photography
+
+---
+
+## 4. Project Setup
+
+### Prerequisites
+
+- Node.js v18.17 or later — [nodejs.org](https://nodejs.org)
+- VS Code (recommended)
+- Terminal (built into VS Code)
+
+### Create the Project
+
+```bash
+npx create-next-app@latest kidlat-civiclabs-website
+```
+
+**Recommended setup prompt answers:**
+
+```
+✔ TypeScript?          → No
+✔ ESLint?              → Yes
+✔ Tailwind CSS?        → Yes
+✔ src/ directory?      → Yes
+✔ App Router?          → Yes
+✔ Customize alias?     → No
+```
+
+### Install Dependencies
+
+```bash
+cd kidlat-civiclabs-website
+
+# Email
+npm install resend react-email
+
+# Forms & Validation
+npm install react-hook-form zod
+
+# Rate Limiting
+npm install @upstash/ratelimit @upstash/redis
+```
+
+### Run Locally
+
+```bash
+npm run dev
+# → http://localhost:3000
+```
+
+---
+
+## 5. Folder Structure
+
+```
+kidlat-civiclabs-website/
+├── src/
+│   └── app/
+│       ├── layout.js                  ← Root layout (navbar, footer, metadata, schema)
+│       ├── page.js                    ← Homepage "/"
+│       ├── about/
+│       │   └── page.js                ← "/about" — org story, mission, team
+│       ├── projects/
+│       │   ├── page.js                ← "/projects" — all civic tech projects
+│       │   └── [slug]/
+│       │       └── page.js            ← "/projects/[slug]" — individual project detail
+│       ├── research/
+│       │   └── page.js                ← "/research" — published research & papers
+│       ├── contact/
+│       │   └── page.js                ← "/contact" — inquiry form
+│       ├── api/
+│       │   └── contact/
+│       │       └── route.js           ← Serverless email API route
+│       ├── sitemap.js                 ← Auto-generates /sitemap.xml
+│       └── globals.css                ← Global styles + CSS brand variables
+├── public/
+│   ├── logo/                          ← Logo variants (horizontal, icon, vertical)
+│   └── og-image.png                   ← Open Graph social share image
+├── components/
+│   ├── Navbar.jsx
+│   ├── Footer.jsx
+│   └── ProjectCard.jsx
+├── .env.local                         ← Secret keys (never commit)
+├── next.config.js                     ← Security headers
+└── tailwind.config.js                 ← Brand colors
+```
+
+---
+
+## 6. Brand Implementation in Code
+
+### Global CSS — `src/app/globals.css`
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #0071BC;
+  --color-dark: #041C23;
+  --color-white: #FFFFFF;
+  --color-accent-sky: #29ABE2;
+  --color-accent-green: #39B54A;
+
+  /* Brand Gradients */
+  --gradient-01: linear-gradient(135deg, #29ABE2, #39B54A);
+  --gradient-02: linear-gradient(135deg, #0071BC, #29ABE2);
+  --gradient-03: linear-gradient(135deg, #0071BC, #041C23);
+}
+
+body {
+  background-color: var(--color-dark);
+  color: var(--color-white);
+  font-family: 'Code Pro', 'Inter', system-ui, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Gibson', 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+```
+
+### Sample Hero Section
+
+```jsx
+// components/Hero.jsx
+export default function Hero() {
+  return (
+    <section
+      className="min-h-screen flex items-center justify-center text-white"
+      style={{ background: 'var(--gradient-03)' }}
+    >
+      <div className="text-center max-w-4xl px-6">
+        <h1 className="text-6xl font-bold uppercase mb-4">
+          Kidlat CivicLabs
+        </h1>
+        <p className="text-xl text-fresh-sky mb-8">
+          Civic technology for better governance and communities.
+        </p>
+        <a
+          href="/projects"
+          className="px-8 py-4 rounded-full font-bold uppercase"
+          style={{ background: 'var(--gradient-01)' }}
+        >
+          See Our Work
+        </a>
+      </div>
+    </section>
+  );
+}
+```
+
+---
+
+## 7. Contact Form & Email Sending
+
+### Email Flow
+
+```
+User fills form on /contact
+  → React Hook Form validates (client-side)
+    → POST to /api/contact
+      → Zod validates server-side
+        → Upstash rate limiter checks IP
+          → Resend sends email to official@kidlatciviclabs.org
+            → User sees success message
+```
+
+### API Route — `src/app/api/contact/route.js`
+
+```js
+import { Resend } from "resend";
+import { z } from "zod";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(3, "1 h"),
+});
+
+const ContactSchema = z.object({
+  name: z.string().min(2).max(100),
+  email: z.string().email(),
+  organization: z.string().max(100).optional(),
+  message: z.string().min(10).max(2000),
+});
+
+export async function POST(req) {
+  const origin = req.headers.get("origin");
+  if (origin !== process.env.NEXT_PUBLIC_SITE_URL) {
+    return Response.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const ip = req.headers.get("x-forwarded-for") ?? "anonymous";
+  const { success } = await ratelimit.limit(ip);
+  if (!success) {
+    return Response.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+  }
+
+  const body = await req.json();
+  const result = ContactSchema.safeParse(body);
+  if (!result.success) {
+    return Response.json({ error: "Invalid input." }, { status: 400 });
+  }
+
+  const { name, email, organization, message } = result.data;
+
+  await resend.emails.send({
+    from: "website@kidlatciviclabs.org",
+    to: "official@kidlatciviclabs.org",
+    subject: `New Inquiry from ${name}${organization ? ` (${organization})` : ""}`,
+    html: `
+      <div style="font-family: sans-serif; background: #041C23; color: #fff; padding: 32px; border-radius: 12px;">
+        <h2 style="color: #0071BC;">New Website Inquiry</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        ${organization ? `<p><strong>Organization:</strong> ${organization}</p>` : ""}
+        <hr style="border-color: #0071BC;" />
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      </div>
+    `,
+  });
+
+  return Response.json({ success: true });
+}
+```
+
+### Environment Variables — `.env.local`
+
+```bash
+RESEND_API_KEY=re_xxxxxxxxxxxx
+UPSTASH_REDIS_REST_URL=https://your-url.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your_token
+NEXT_PUBLIC_SITE_URL=https://kidlatciviclabs.org
+```
+
+> ⚠️ Never commit `.env.local` to GitHub. It is in `.gitignore` by default.
+
+---
+
+## 8. SEO Optimization
+
+### Metadata — `src/app/layout.js`
+
+```js
+export const metadata = {
+  title: {
+    default: "Kidlat CivicLabs — Civic Technology for Better Governance",
+    template: "%s | Kidlat CivicLabs",
+  },
+  description:
+    "Kidlat CivicLabs builds civic technology solutions for government, communities, and public institutions in the Philippines.",
+  keywords: ["civic tech", "government technology", "Philippines", "public sector innovation"],
+  openGraph: {
+    title: "Kidlat CivicLabs",
+    description: "Civic technology for better governance and communities.",
+    url: "https://kidlatciviclabs.org",
+    siteName: "Kidlat CivicLabs",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+    locale: "en_PH",
+    type: "website",
+  },
+  twitter: { card: "summary_large_image" },
+  metadataBase: new URL("https://kidlatciviclabs.org"),
+};
+```
+
+### Sitemap — `src/app/sitemap.js`
+
+```js
+export default function sitemap() {
+  return [
+    { url: "https://kidlatciviclabs.org", lastModified: new Date() },
+    { url: "https://kidlatciviclabs.org/about", lastModified: new Date() },
+    { url: "https://kidlatciviclabs.org/projects", lastModified: new Date() },
+    { url: "https://kidlatciviclabs.org/research", lastModified: new Date() },
+    { url: "https://kidlatciviclabs.org/contact", lastModified: new Date() },
+  ];
+}
+```
+
+Submit `/sitemap.xml` to Google Search Console after first deploy.
+
+### Structured Data
+
+```js
+// In src/app/layout.js <head>
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Kidlat CivicLabs",
+  url: "https://kidlatciviclabs.org",
+  email: "official@kidlatciviclabs.org",
+  description: "Civic technology solutions for government and communities.",
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "PH",
+  },
+  sameAs: [
+    // Add your social media URLs here
+  ],
+};
+```
+
+### Core Web Vitals Checklist
+
+- Use `next/image` for all images — auto-compress, lazy load, serve WebP
+- Use `next/font` for Gibson/Systemia/Code Pro — eliminates layout shift
+- Minimize third-party scripts — each one hurts load time
+- Target **Lighthouse 90+** — audit at [pagespeed.web.dev](https://pagespeed.web.dev)
+
+### Content Strategy for Civic Tech SEO
+
+| Content | Target Keywords | Priority |
+|---|---|---|
+| Project case studies | "civic tech Philippines", "government digitization PH" | 🔴 High |
+| Research publications | "public sector technology research", specific policy areas | 🔴 High |
+| Homepage copy | "civic technology solutions", "CivicLabs Philippines" | 🟠 Medium |
+| Blog / Insights | Thought leadership on governance + tech topics | 🟡 Ongoing |
+
+---
+
+## 9. Security
+
+### Priority Matrix
+
+| Priority | Measure |
+|---|---|
+| 🔴 Critical | API keys in `.env.local`, never in source code |
+| 🔴 Critical | Zod validation on all API route inputs |
+| 🔴 Critical | Rate limiting on contact form (Upstash) |
+| 🟠 High | HTTP security headers in `next.config.js` |
+| 🟠 High | Cloudflare Turnstile CAPTCHA on contact form |
+| 🟡 Medium | CORS — only accept requests from `kidlatciviclabs.org` |
+| 🟡 Medium | Resend domain verification (SPF, DKIM, DMARC) |
+| 🟢 Ongoing | `npm audit` — run monthly |
+
+### Security Headers — `next.config.js`
+
+```js
+const securityHeaders = [
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Content-Security-Policy",
+    value: "default-src 'self'; script-src 'self' 'unsafe-inline';",
+  },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=()",
+  },
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains; preload",
+  },
+];
+
+module.exports = {
+  async headers() {
+    return [{ source: "/(.*)", headers: securityHeaders }];
+  },
+};
+```
+
+### Resend Email Domain Setup
+
+After verifying `kidlatciviclabs.org` in Resend's dashboard, add these DNS records at your registrar:
+
+| Record Type | Purpose |
+|---|---|
+| **SPF** | Authorizes Resend to send email on behalf of your domain |
+| **DKIM** | Cryptographically signs outgoing emails |
+| **DMARC** | Instructs receiving servers on how to handle failed checks |
+
+This ensures emails from `website@kidlatciviclabs.org` land in inboxes, not spam.
+
+---
+
+## 10. Deployment
+
+### Deploy to Vercel
+
+**Recommended: GitHub Integration**
+
+1. Push project to a GitHub repository
+2. Go to [vercel.com](https://vercel.com) → Import Project → Select repo
+3. Vercel auto-deploys on every push to `main`
+4. Add a custom domain: `kidlatciviclabs.org`
+
+### Environment Variables on Vercel
+
+`Settings → Environment Variables → Add`:
+
+```
+RESEND_API_KEY
+UPSTASH_REDIS_REST_URL
+UPSTASH_REDIS_REST_TOKEN
+NEXT_PUBLIC_SITE_URL     → https://kidlatciviclabs.org
+```
+
+### Post-Deploy Checklist
+
+- [ ] Submit `https://kidlatciviclabs.org/sitemap.xml` to Google Search Console
+- [ ] Verify `kidlatciviclabs.org` domain in Resend dashboard
+- [ ] Add SPF, DKIM, DMARC DNS records at registrar
+- [ ] Run Lighthouse audit — target 90+ score
+- [ ] Test contact form end-to-end (check `official@kidlatciviclabs.org`)
+- [ ] Set up Google Analytics 4
+- [ ] Enable 2FA on Vercel account and domain registrar
+
+---
+
+## 11. Tools & Monitoring
+
+| Tool | Purpose | Cost |
+|---|---|---|
+| [Google Search Console](https://search.google.com/search-console) | Rankings, indexing, crawl errors | Free |
+| [Google Analytics 4](https://analytics.google.com) | Traffic, behavior, conversions | Free |
+| [PageSpeed Insights](https://pagespeed.web.dev) | Core Web Vitals audit | Free |
+| [Resend Dashboard](https://resend.com) | Email delivery logs | Free tier |
+| [Upstash Console](https://console.upstash.com) | Rate limiting stats | Free tier |
+| [Vercel Analytics](https://vercel.com/analytics) | Real-user performance data | Free tier |
+
+---
+
+## 12. Quick Reference Prompt
+
+Paste this at the top of any new AI chat to restore full project context:
+
+```
+I am building the official website for Kidlat CivicLabs — a civic technology
+organization focused on government solutions in the Philippines.
+
+Website goal: Showcase civic tech projects and research.
+Contact email: official@kidlatciviclabs.org
+
+Tech Stack:
+- Next.js (App Router) + Tailwind CSS
+- Vercel (hosting + serverless)
+- Resend + React Email (contact form email)
+- React Hook Form + Zod (form handling + validation)
+- Upstash Ratelimit (rate limiting)
+- Cloudflare Turnstile (CAPTCHA)
+- Sanity (optional CMS for projects/research)
+
+Brand Identity (from official Kidlat CivicLabs Brand Guidelines 2025):
+- Primary Color: #0071BC (Vivid Azure) — 60% usage
+- Dark Neutral: #041C23 (Dark Azure) — 30%
+- White Neutral: #FFFFFF — 30%
+- Accent: #29ABE2 (Fresh Sky) — 10%, use sparingly
+- Accent: #39B54A (Jade Green) — 10%, use sparingly
+- Gradients: Soft, abstract. Use Gradient 01 (Fresh Sky→Jade Green),
+  Gradient 02 (Vivid Azure→Fresh Sky), Gradient 03 (Vivid Azure→Dark Azure)
+- Fonts: Gibson Bold (headers, ALL CAPS), Systemia (subheaders),
+  Code Pro (body, sentence case, tracking 20)
+- Icons: Solid only, no outlines. Add gradients for visual depth.
+
+Email Flow:
+Contact form → React Hook Form → POST /api/contact → Zod validation
+→ Upstash rate limit → Resend → official@kidlatciviclabs.org
+
+Security: env vars in .env.local, Zod validation, rate limiting,
+security headers in next.config.js, CORS restricted to kidlatciviclabs.org,
+Resend domain verified with SPF/DKIM/DMARC.
+
+Dev Experience: Intermediate (comfortable with JS/React).
+
+Please help me continue building this project with the above context in mind.
+```
+
+---
+
+*Kidlat CivicLabs — All Rights Reserved 2025*
+*Website Technical Guide — Last updated May 2026*
